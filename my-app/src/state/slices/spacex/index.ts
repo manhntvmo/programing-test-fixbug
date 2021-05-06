@@ -2,13 +2,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import spacexApi from '../../../api/spacexApi';
 import { IFlight } from '../../../services/flight-services/flight.interface';
 
-export const fetchListFlights = createAsyncThunk('flights/getFlights', async () => {
+interface FetchListParams {
+  name: string;
+}
+
+export const fetchListFlights = createAsyncThunk('flights/getFlights', async ({ name }: FetchListParams) => {
   try {
-    const response = await spacexApi.get('');
+    const appendURL = `${name ? `?rocket_name=${name}` : ''}`;
+    console.log(appendURL)
+    const response = await spacexApi.get(`${appendURL}`);
 
     return response.data;
   } catch (err) {
-    throw err;
+    return err.message;
   }
 });
 

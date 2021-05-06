@@ -2,22 +2,24 @@ import { useState } from 'react';
 import { Form, InputGroup, FormControl, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useHistory } from 'react-router';
 
 interface SearchBoxProps {
   placeholder?: string;
-  history: any;
 }
 
-export const SearchBox = ({ placeholder, history }: SearchBoxProps) => {
+export const SearchBox = ({ placeholder }: SearchBoxProps) => {
   const [name, setName] = useState<string>('');
+  const history = useHistory()
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    history.push(`search?name=${name}`)
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <InputGroup>
+    <Form className="w-50 m-auto" onSubmit={handleSubmit}>
+      <InputGroup className="mb-5">
         <FormControl
           placeholder={placeholder}
           aria-label='Amount (to the nearest dollar)'
