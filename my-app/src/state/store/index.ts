@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import spacexSlice from '../slices/spacex/SpaceX';
+import spacexSlice from '../slices/spacex';
 
 export const store = configureStore({
   reducer: {
