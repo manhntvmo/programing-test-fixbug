@@ -5,10 +5,10 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/" component={Home}></Route>
+        <Route path='/' component={Home}></Route>
       </Switch>
     </Router>
   );
-};
+}
 
-export default App; 
+export default App;

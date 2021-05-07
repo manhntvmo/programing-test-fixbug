@@ -5,19 +5,20 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 interface SearchBoxProps {
   placeholder?: string;
-  history: any;
+  onSearchChange(value: string): void;
 }
 
-export const SearchBox = ({ placeholder, history }: SearchBoxProps) => {
+export const SearchBox = ({ placeholder, onSearchChange }: SearchBoxProps) => {
   const [name, setName] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    onSearchChange(name);
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <InputGroup>
+    <Form className='w-50 m-auto' onSubmit={handleSubmit}>
+      <InputGroup className='mb-5'>
         <FormControl
           placeholder={placeholder}
           aria-label='Amount (to the nearest dollar)'
