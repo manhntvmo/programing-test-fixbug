@@ -1,6 +1,6 @@
 import { Card } from 'react-bootstrap';
 import { Status } from '../../../../../components/status';
-import { formatDate } from '../../../../../helpers/common.util';
+import { formatDate } from '../../../../../helpers/date.util';
 import { IFlight } from '../../../../../services/flight-services/flight.interface';
 
 interface CardFlightProps {

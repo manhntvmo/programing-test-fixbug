@@ -5,11 +5,12 @@ import { fetchListFlights } from '../../state/slices/spacex';
 import { Loading } from '../../components/loading';
 import { MessageBox } from '../../components/message-box';
 import { CardList } from './components/card-list';
-import { Container, Row } from 'react-bootstrap';
+import { Button, Container, Row } from 'react-bootstrap';
 import { SearchBox } from '../../components/search-box';
 import { menusLaunchDate, menusLaunchStatus } from './constants/menu';
 import { FilterLists } from '../../components/filter-list';
-import { getLastMonthStartEnd, getLastWeekStartEnd, getLastYearStartEnd } from '../../helpers/common.util';
+import { getLastMonthStartEnd, getLastWeekStartEnd, getLastYearStartEnd } from '../../helpers/date.util';
+import { paginate } from '../../helpers/paginate.util';
 
 export const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,7 +18,9 @@ export const Home = () => {
     launchDate: '',
     launchSuccess: '',
   });
-
+  const [listFlight, setListFlight] = useState<any>([]);
+  const [page, setPage] = useState(0);
+  const [totalPage, setTotagPage] = useState<any>([]);
   const {
     spacex: { flights, status, error },
   } = useAppSelector(state => state);
@@ -65,7 +68,16 @@ export const Home = () => {
   useEffect(() => {
     const listParamsUrl = getListParamsUrl();
     dispatch(fetchListFlights(listParamsUrl));
+    setPage(0);
   }, [dispatch, getListParamsUrl]);
+
+  useEffect(() => {
+    if (status === 'success') {
+      const listFlightPagination = paginate(flights, 12);
+      setTotagPage(listFlightPagination);
+      setListFlight(listFlightPagination[page]);
+    }
+  }, [flights, page, status]);
 
   return (
     <Container fluid className='fluid bg-light p-4'>
@@ -92,10 +104,24 @@ export const Home = () => {
         <MessageBox variant='warning'>{error}</MessageBox>
       ) : (
         <>
-          <Row>
-            <CardList flights={flights} />
+          <Row className="mb-4">
+            <CardList flights={listFlight} />
           </Row>
         </>
+      )}
+      {listFlight && (
+        <div className='d-flex justify-content-center'>
+          {totalPage.map((_: any, index: number) => (
+            <Button
+              key={index}
+              className='rounded mx-1'
+              variant={`${index === page ? 'primary' : 'secondary'}`}
+              onClick={() => setPage(index)}
+            >
+              {index + 1}
+            </Button>
+          ))}
+        </div>
       )}
     </Container>
   );
