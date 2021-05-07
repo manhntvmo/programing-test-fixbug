@@ -9,7 +9,7 @@ interface CardFlightProps {
 
 export const CardFlight = ({ flight }: CardFlightProps) => {
   return (
-    <Card className='m-auto w-75 rounded shadow'>
+    <Card className='m-auto w-75 h-100 rounded shadow'>
       <Card.Img src={flight.links.mission_patch} />
       <Card.Body>
         <Card.Title>{flight.mission_name}</Card.Title>
