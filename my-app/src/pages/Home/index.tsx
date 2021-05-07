@@ -112,7 +112,7 @@ export const Home = () => {
           </Row>
         </>
       )}
-      {listFlight && (
+      {listFlight && listFlight.length > 0 ? (
         <div className='d-flex justify-content-center'>
           {totalPage.map((_: any, index: number) => (
             <Button
@@ -125,7 +125,7 @@ export const Home = () => {
             </Button>
           ))}
         </div>
-      )}
+      ) : <MessageBox variant='warning'>Results not found!</MessageBox>}
     </Container>
   );
 };
