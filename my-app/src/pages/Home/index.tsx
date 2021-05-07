@@ -27,7 +27,7 @@ export const Home = () => {
     setSearchTerm(value);
   };
 
-  const handleFilterChange = (title: string, value?: string | null) => {
+  const handleFilterChange = (title: string, value?: string) => {
     const titleFilter = title === 'Launch Date' ? 'launchDate' : 'launchSuccess';
 
     setFilterBy(prevState => ({

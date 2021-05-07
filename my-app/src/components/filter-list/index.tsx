@@ -1,4 +1,3 @@
-import { AnyCnameRecord, AnyMxRecord } from 'dns';
 import { useState } from 'react';
 import { DropdownButton, Dropdown, ButtonGroup } from 'react-bootstrap';
 
@@ -12,7 +11,7 @@ interface FilterListProps {
   title: string;
   menus: MenusParam[];
   className?: string;
-  onChangeDropdown(title: string, e: any): void;
+  onChangeDropdown(title: string, e: string): void;
 }
 
 export const FilterLists = ({ variant, title, menus, className, onChangeDropdown }: FilterListProps) => {

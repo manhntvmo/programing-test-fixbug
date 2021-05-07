@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Form, InputGroup, FormControl, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { useHistory } from 'react-router';
 
 interface SearchBoxProps {
   placeholder?: string;
@@ -11,11 +10,9 @@ interface SearchBoxProps {
 
 export const SearchBox = ({ placeholder, onSearchChange }: SearchBoxProps) => {
   const [name, setName] = useState<string>('');
-  // const history = useHistory();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // history.push(`search?name=${name}`);
     onSearchChange(name);
   };
 

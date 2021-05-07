@@ -23,12 +23,6 @@ export const FilterButton = ({
   const handleClickButton = () => {
     setIsActive(!isActive);
     onClickButton(title, String(!isActive));
-    // if (!isActive) {
-    //   onClickButton(title, isActive);
-    //   return;
-    // }
-
-    // onClickButton();
   };
 
   return (
