@@ -6,11 +6,9 @@ interface FetchListParams {
   name: string;
 }
 
-export const fetchListFlights = createAsyncThunk('flights/getFlights', async ({ name }: FetchListParams) => {
+export const fetchListFlights = createAsyncThunk('flights/getFlights', async (listParams: string) => {
   try {
-    const appendURL = `${name ? `?rocket_name=${name}` : ''}`;
-    console.log(appendURL)
-    const response = await spacexApi.get(`${appendURL}`);
+    const response = await spacexApi.get(listParams);
 
     return response.data;
   } catch (err) {
