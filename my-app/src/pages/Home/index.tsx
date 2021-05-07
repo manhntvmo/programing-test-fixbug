@@ -15,8 +15,8 @@ import { paginate } from '../../helpers/paginate.util';
 export const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterBy, setFilterBy] = useState({
-    launchDate: '',
-    launchSuccess: '',
+    launchDate: 'all',
+    launchSuccess: 'all',
   });
   const [listFlight, setListFlight] = useState<any>([]);
   const [page, setPage] = useState(0);
@@ -43,24 +43,29 @@ export const Home = () => {
     let listParams = '';
     listParams += searchTerm ? `?rocket_name=${searchTerm}` : '';
 
-    const launchSuccessValue = filterBy.launchSuccess.toLowerCase() === 'Success' ? 'true' : 'false';
-    listParams += filterBy.launchSuccess
-      ? listParams
+    const launchSuccessValue =
+      filterBy.launchSuccess === 'success' ? 'true' : filterBy.launchSuccess === 'failure' ? 'false' : 'all';
+    listParams +=
+      filterBy.launchSuccess === 'all'
+        ? ''
+        : listParams
         ? `&launch_success=${launchSuccessValue}`
-        : `?launch_success=${launchSuccessValue}`
-      : '';
+        : `?&launch_success=${launchSuccessValue}`;
 
     const launchDateFromTo =
       filterBy.launchDate === 'last_week'
         ? getLastWeekStartEnd()
         : filterBy.launchDate === 'last_month'
         ? getLastMonthStartEnd()
-        : getLastYearStartEnd();
-    listParams += filterBy.launchDate
-      ? listParams
+        : filterBy.launchDate === 'last_year'
+        ? getLastYearStartEnd()
+        : { start: '', end: '' };
+    listParams +=
+      filterBy.launchDate === 'all'
+        ? ''
+        : listParams
         ? `&start=${launchDateFromTo.start}&end=${launchDateFromTo.end}`
-        : `?start=${launchDateFromTo.start}&end=${launchDateFromTo.end}`
-      : '';
+        : `?start=${launchDateFromTo.start}&end=${launchDateFromTo.end}`;
 
     return listParams;
   }, [searchTerm, filterBy.launchSuccess, filterBy.launchDate]);
@@ -80,22 +85,20 @@ export const Home = () => {
   }, [flights, page, status]);
 
   return (
-    <Container fluid className='fluid bg-light p-4'>
+    <Container fluid className='fluid min-vh-100 bg-light p-4'>
       <SearchBox placeholder='Search' onSearchChange={handleInputChange} />
-      <div className='text-center mb-4'>
+      <div className='d-flex justify-content-center mb-4'>
         <FilterLists
           variant='secondary'
           title='Launch Date'
           menus={menusLaunchDate}
           onChangeDropdown={handleFilterChange}
-          className='mx-2'
         />
         <FilterLists
           variant='secondary'
           title='Launch Status'
           menus={menusLaunchStatus}
           onChangeDropdown={handleFilterChange}
-          className='mx-2'
         />
       </div>
       {status === 'loading' ? (
@@ -104,7 +107,7 @@ export const Home = () => {
         <MessageBox variant='warning'>{error}</MessageBox>
       ) : (
         <>
-          <Row className="mb-4">
+          <Row className='mb-4'>
             <CardList flights={listFlight} />
           </Row>
         </>
