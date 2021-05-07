@@ -6,20 +6,22 @@ import { useHistory } from 'react-router';
 
 interface SearchBoxProps {
   placeholder?: string;
+  onSearchChange(value: string): void;
 }
 
-export const SearchBox = ({ placeholder }: SearchBoxProps) => {
+export const SearchBox = ({ placeholder, onSearchChange }: SearchBoxProps) => {
   const [name, setName] = useState<string>('');
-  const history = useHistory()
+  // const history = useHistory();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    history.push(`search?name=${name}`)
+    // history.push(`search?name=${name}`);
+    onSearchChange(name);
   };
 
   return (
-    <Form className="w-50 m-auto" onSubmit={handleSubmit}>
-      <InputGroup className="mb-5">
+    <Form className='w-50 m-auto' onSubmit={handleSubmit}>
+      <InputGroup className='mb-5'>
         <FormControl
           placeholder={placeholder}
           aria-label='Amount (to the nearest dollar)'
