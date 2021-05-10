@@ -13,7 +13,7 @@ interface FilterListProps {
   onChangeDropdown(title: string, e: string): void;
 }
 
-export const FilterLists = ({ variant, title, menus, className, onChangeDropdown }: FilterListProps) => {
+export const FilterLists = ({ title, menus, className, onChangeDropdown }: FilterListProps) => {
   const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChangeDropdown(title, e.target.value);
   };

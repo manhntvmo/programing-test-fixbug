@@ -11,6 +11,7 @@ import { menusLaunchDate, menusLaunchStatus } from './constants/menu';
 import { FilterLists } from '../../components/filter-list';
 import { getLastMonthStartEnd, getLastWeekStartEnd, getLastYearStartEnd } from '../../helpers/date.util';
 import { paginate } from '../../helpers/paginate.util';
+import { IFlight } from '../../services/flight-services/flight.interface';
 
 export const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,9 +19,10 @@ export const Home = () => {
     launchDate: 'all',
     launchSuccess: 'all',
   });
-  const [listFlight, setListFlight] = useState<any>([]);
+  const [listFlight, setListFlight] = useState<IFlight[] | null>(null);
   const [page, setPage] = useState(0);
   const [totalPage, setTotagPage] = useState<any>([]);
+  
   const {
     spacex: { flights, status, error },
   } = useAppSelector(state => state);
@@ -50,7 +52,7 @@ export const Home = () => {
         ? ''
         : listParams
         ? `&launch_success=${launchSuccessValue}`
-        : `?&launch_success=${launchSuccessValue}`;
+        : `?launch_success=${launchSuccessValue}`;
 
     const launchDateFromTo =
       filterBy.launchDate === 'last_week'
@@ -80,14 +82,14 @@ export const Home = () => {
     if (status === 'success') {
       const listFlightPagination = paginate(flights, 12);
       setTotagPage(listFlightPagination);
-      setListFlight(listFlightPagination[page]);
+      setListFlight(listFlightPagination.length > 0 ? listFlightPagination[page] : []);
     }
   }, [flights, page, status]);
 
   return (
     <Container fluid className='fluid min-vh-100 bg-light p-4'>
       <SearchBox placeholder='Search' onSearchChange={handleInputChange} />
-      <div className='d-flex justify-content-center mb-4'>
+      <div className='d-md-flex d-sm-block justify-content-center mb-4'>
         <FilterLists
           variant='secondary'
           title='Launch Date'
@@ -105,13 +107,17 @@ export const Home = () => {
         <Loading />
       ) : status === 'failed' ? (
         <MessageBox variant='warning'>{error}</MessageBox>
-      ) : (
-        <>
-          <Row className='mb-4'>
-            <CardList flights={listFlight} />
-          </Row>
-        </>
-      )}
+      ) : listFlight ? (
+        listFlight.length > 0 ? (
+          <>
+            <Row className='mb-4'>
+              <CardList flights={listFlight} />
+            </Row>
+          </>
+        ) : (
+          <MessageBox variant='warning'>Results not found!</MessageBox>
+        )
+      ) : null}
       {listFlight && listFlight.length > 0 ? (
         <div className='d-flex justify-content-center'>
           {totalPage.map((_: any, index: number) => (
@@ -125,7 +131,7 @@ export const Home = () => {
             </Button>
           ))}
         </div>
-      ) : <MessageBox variant='warning'>Results not found!</MessageBox>}
+      ) : null}
     </Container>
   );
 };
