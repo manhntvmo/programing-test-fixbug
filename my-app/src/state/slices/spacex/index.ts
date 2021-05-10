@@ -2,17 +2,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import spacexApi from '../../../api/spacexApi';
 import { IFlight } from '../../../services/flight-services/flight.interface';
 
-interface FetchListParams {
-  name: string;
-}
-
-export const fetchListFlights = createAsyncThunk('flights/getFlights', async (listParams: string) => {
+export const fetchListFlights = createAsyncThunk('flights/getFlights', async (listParams: string, thunkAPI) => {
   try {
     const response = await spacexApi.get(listParams);
 
     return response.data;
   } catch (err) {
-    return err.message;
+    if (!err.response) {
+      throw err
+    }
+
+    return thunkAPI.rejectWithValue(err.response.data);
   }
 });
 
@@ -25,6 +25,7 @@ interface SpaceX {
 const initialState: SpaceX = {
   flights: [],
   status: null,
+  error: null,
 };
 
 const spacexSlice = createSlice({
