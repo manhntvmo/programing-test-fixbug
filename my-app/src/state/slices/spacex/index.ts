@@ -5,11 +5,15 @@ import { IFlight } from '../../../services/flight-services/flight.interface';
 export const fetchListFlights = createAsyncThunk('flights/getFlights', async (listParams: string, thunkAPI) => {
   try {
     const response = await spacexApi.get(listParams);
+    const data = {
+      flights: response.data,
+      pageSize: response.headers['spacex-api-count'],
+    };
 
-    return response.data;
+    return data;
   } catch (err) {
     if (!err.response) {
-      throw err
+      throw err;
     }
 
     return thunkAPI.rejectWithValue(err.response.data);
@@ -17,13 +21,19 @@ export const fetchListFlights = createAsyncThunk('flights/getFlights', async (li
 });
 
 interface SpaceX {
-  flights: IFlight[];
+  data: {
+    pageSize: number;
+    flights: IFlight[] | null;
+  };
   status: string | null;
   error?: any;
 }
 
 const initialState: SpaceX = {
-  flights: [],
+  data: {
+    pageSize: 0,
+    flights: null,
+  },
   status: null,
   error: null,
 };
@@ -37,7 +47,7 @@ const spacexSlice = createSlice({
       state.status = 'loading';
     });
     builder.addCase(fetchListFlights.fulfilled, (state, action) => {
-      state.flights = action.payload;
+      state.data = action.payload;
       state.status = 'success';
     });
     builder.addCase(fetchListFlights.rejected, (state, action) => {
